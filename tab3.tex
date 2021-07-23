@@ -1,0 +1,57 @@
+
+\begin{table*}[!ht]
+\begin{adjustwidth}{-1.25in}{0in}
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\caption{\hl{Results of logistic regression on pre \& post population [Log Odds]}}
+\begin{tabular}{l*{6}{c}}
+\hline\hline
+                    &\multicolumn{1}{c}{(1)}&\multicolumn{1}{c}{(2)}&\multicolumn{1}{c}{(3)}&\multicolumn{1}{c}{(4)}&\multicolumn{1}{c}{(5)}&\multicolumn{1}{c}{(6)}\\
+                    &\multicolumn{1}{c}{Had sex}&\multicolumn{1}{c}{CU}&\multicolumn{1}{c}{CU}&\multicolumn{1}{c}{Trying}&\multicolumn{1}{c}{Intention}&\multicolumn{1}{c}{Intention}\\
+\hline
+
+Lockdown (Ref = Pre)      &       0.325\sym{*}  &      -0.517\sym{***}&      -0.733\sym{***}&      -0.532\sym{**} &      0.015         &     -0.017         \\
+                    &      (2.28)         &     (-5.34)         &     (-5.65)         &     (-2.85)         &      (0.13)         &     (-0.12)         \\
+[1em]
+Age [18-49]                &    -0.009         &     -0.020\sym{***}&     -0.019\sym{***}&     -0.029\sym{**} &      -0.124\sym{***}&      -0.124\sym{***}\\
+                    &     (-1.05)         &     (-3.64)         &     (-3.54)         &     (-2.75)         &    (-16.17)         &    (-16.18)         \\
+[1em]
+Sex (Ref = Female)                &       1.061\sym{***}&      -0.322\sym{***}&      -0.316\sym{***}&      0.027         &       0.677\sym{***}&       0.678\sym{***}\\
+                    &      (6.28)         &     (-3.58)         &     (-3.51)         &      (0.14)         &      (6.07)         &      (6.08)         \\
+[1em]
+Number of Children [1-6] &     -0.064         &      0.074         &      0.078        &      -0.620\sym{***}&      -0.580\sym{***}&      -0.581\sym{***}\\
+                    &     (-1.09)         &      (1.86)         &      (1.96)         &     (-6.53)         &    (-10.36)         &    (-10.36)         \\
+[1em]
+Tertiary Education (Ref = No)  &       0.270         &       0.247\sym{**} &       0.232\sym{*}  &     -0.084         &      0.018         &      0.018         \\
+                    &      (1.76)         &      (2.59)         &      (2.43)         &     (-0.43)         &      (0.15)         &      (0.15)         \\
+[1em]
+Employed (Ref = No)            &       0.368\sym{**} &      0.071         &      0.069         &      0.095         &     -0.037         &     -0.033        \\
+                    &      (2.72)         &      (0.77)         &      (0.75)         &      (0.49)         &     (-0.32)         &     (-0.29)         \\
+[1em]
+Residence (Ref = Rural)    &       0.189         &       0.165         &      -0.178         &       0.132         &       0.324\sym{**} &       0.322\sym{**} \\
+                    &      (1.27)         &      (1.74)         &     (-1.08)         &      (0.69)         &      (2.80)         &      (2.77)         \\
+[1em]
+Willingness to answer [1-10]&      0.042         &      -0.238\sym{***}&      -0.244\sym{***}&       0.131         &      0.047         &      0.050         \\
+                    &      (0.63)         &     (-4.81)         &     (-4.93)         &      (1.25)         &      (0.86)         &      (0.90)         \\
+[1em]
+Others Present  (Ref = No)    &       0.164         &       0.292\sym{*}  &       0.291\sym{*}  &      -0.269         &     -0.054         &     -0.053         \\
+                    &      (0.86)         &      (2.45)         &      (2.44)         &     (-1.00)         &     (-0.37)         &     (-0.37)         \\
+[1em]
+Lockdown X Residence&                     &                     &       0.493\sym{*}  &                     &                     &                     \\
+                    &                     &                     &      (2.54)         &                     &                     &                     \\
+[1em]
+Income Drop (Ref = No)    &                     &                     &                     &                     &                     &      0.056         \\
+                    &                     &                     &                     &                     &                     &      (0.45)         \\
+[1em]
+Lockdown X Income Drop&                     &                     &                     &                     &                     &           \hl{0.703}         \\
+                    &                     &                     &                     &                     &                     &         \hl{(0.473)}         \\
+[1em]
+Constant            &       1.093         &       3.183\sym{***}&       3.392\sym{***}&      -1.741         &       3.721\sym{***}&       3.700\sym{***}\\
+                    &      (1.52)         &      (6.02)         &      (6.32)         &     (-1.59)         &      (6.27)         &      (6.22)         \\
+\hline
+Observations        &        2286         &        2384         &        2384         &        2218         &        2113         &        2113         \\
+\hline\hline
+\multicolumn{7}{l}{\footnotesize \textit{t} statistics in parentheses}\\
+\multicolumn{7}{l}{\footnotesize \sym{*} \(p<0.05\), \sym{**} \(p<0.01\), \sym{***} \(p<0.001\)}\\
+\end{tabular}
+\end{adjustwidth}
+\end{table*}
