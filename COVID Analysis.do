@@ -166,7 +166,7 @@ label var rep05 "Willingness to answer"
 lab def covid 0 "Pre Lockdown" 1 "Post Lockdown"
 lab val covid covid
 
-lab def educ 0 "No Tertiary Education" 1 "Tertiary Education"
+lab def educ 0 "No Higher Education" 1 "Higher Education"
 lab val educ educ
 
 lab def employ 0 "Not Working" 1 "Working"
