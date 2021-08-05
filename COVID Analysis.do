@@ -138,7 +138,7 @@ foreach x in fer12a fer12b fer12c fer12m fer12o fer12p {
 recode asex (2 = 0)
 
 gen educ = 0
-replace educ = 1 if inlist(dem07,6,7,8) // education dichotomized into further education and non-further education
+replace educ = 1 if inlist(dem07,3506,3507,3508) // education dichotomized into further education and non-further education
 
 gen employ = 0 
 replace employ = 1 if inlist(dem06,2,3,4,9,10,7) // self reported employment status dichotimized into working v non-working
