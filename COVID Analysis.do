@@ -13,6 +13,8 @@ graph set window fontfacesans `graphfont'
 global data "/Users/temery/surfdrive/Moldova" // Change directory to local
 global folder "/Users/temery/Documents/GitHub/GGSMoldovaCOVID" // Change directory to local working directory
 
+ssc install combomarginsplot, replace
+ssc install blindschemes, replace all
 set scheme plottig
 
 ** Open file and define sample
@@ -30,8 +32,6 @@ rename sex asex
 ** Data cleaning and clarifications
 ********************************************************************************
 
-lab def fer12_ 3501 "Sponge" 3502 "Hormonal Patch" 3503 "LAM" 9991 "None of the above", add modify  // Adding country specific labels to the variable fer12_
-replace cov01 = . if cov01 == 93
 lab var age "Age"
 
 
@@ -138,10 +138,10 @@ foreach x in fer12a fer12b fer12c fer12m fer12o fer12p {
 recode asex (2 = 0)
 
 gen educ = 0
-replace educ = 1 if inlist(dem07,3506,3507,3508) // education dichotomized into further education and non-further education
+replace educ = 1 if inlist(dem07,3506,3507,3508,3509) // education dichotomized into further education and non-further education
 
 gen employ = 0 
-replace employ = 1 if inlist(dem06,2,3,4,9,10,7) // self reported employment status dichotimized into working v non-working
+replace employ = 1 if inlist(dem06,2,3,4,9,10,7,3501) // self reported employment status dichotimized into working v non-working
 
 gen inchit = 0
 replace inchit = 1 if inlist(cov02f,4,5) // respondent indicated that the pandemic very or somewhet negatively affected household income
@@ -175,6 +175,8 @@ lab val employ employ
 lab def others 0 "Interviewed Alone" 1 "Others Present", add modify
 lab val rep01 others
 
+lab def rep05 0 "Some reluctance" 1 "Completely Willing", modify
+lab val rep05 rep05
 
 ** Descriptives
 ********************************************************************************
@@ -252,7 +254,7 @@ collapse (mean) m_mcu = mcu (sd) sd_mcu = mcu (count) n = mcu, by(month)
 generate hi_mcu = m_mcu + invttail(n-1,0.025)*(sd_mcu / sqrt(n))
 generate low_mcu = m_mcu - invttail(n-1,0.025)*(sd_mcu / sqrt(n))
 
-graph twoway (rcap hi_mcu low_mcu month, color(gs10)) (scatter m_mcu month, color("0 125 129")) , graphregion(color(white)) legend(off) xtitle("") ytitle("Proportion") xlab(1(1)12, val angle(90) labgap(14) notick glcolor(gs14)) ylab(0(0.1)1, notick) xscale(lcolor(gs14)) yscale(lcolor(white)) caption("b) Contraceptive Use")
+graph twoway (rcap hi_mcu low_mcu month, color(gs10)) (scatter m_mcu month, color("0 125 129")) , graphregion(color(white)) legend(off) xtitle("") ytitle("Proportion") xlab(1(1)12, val angle(90) labgap(14) notick glcolor(gs14)) ylab(0(0.1)1, notick) xscale(lcolor(gs14)) yscale(lcolor(white)) caption("b) Modern contraceptive use")
 graph save cont, replace
 
 
@@ -265,7 +267,7 @@ collapse (mean) m_try = trying (sd) sd_try = trying (count) n = try, by(month)
 generate hi_try = m_try + invttail(n-1,0.025)*(sd_try / sqrt(n))
 generate low_try = m_try - invttail(n-1,0.025)*(sd_try / sqrt(n))
 
-graph twoway (rcap hi_try low_try month, color(gs10)) (scatter m_try month, color("0 125 129")) , graphregion(color(white)) legend(off) xtitle("") ytitle("Proportion") xlab(1(1)12, val angle(90) labgap(14) notick glcolor(gs14)) ylab(0(0.1)1, notick) xscale(lcolor(gs14)) yscale(lcolor(white)) caption("a) Trying to Conceive")
+graph twoway (rcap hi_try low_try month, color(gs10)) (scatter m_try month, color("0 125 129")) , graphregion(color(white)) legend(off) xtitle("") ytitle("Proportion") xlab(1(1)12, val angle(90) labgap(14) notick glcolor(gs14)) ylab(0(0.1)1, notick) xscale(lcolor(gs14)) yscale(lcolor(white)) caption("a) Trying to conceive")
 graph save trying, replace
 
 
