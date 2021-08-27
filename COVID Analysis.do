@@ -10,6 +10,9 @@ graph set window fontface `graphfont'
 graph set window fontfaceserif `graphfont'
 graph set window fontfacesans `graphfont'
 
+ssc install combomarginsplot, replace
+ssc install blindschemes, replace all
+
 global data "/Users/temery/surfdrive/Moldova" // Change directory to local
 global folder "/Users/temery/Documents/GitHub/GGSMoldovaCOVID" // Change directory to local working directory
 
@@ -138,10 +141,10 @@ foreach x in fer12a fer12b fer12c fer12m fer12o fer12p {
 recode asex (2 = 0)
 
 gen educ = 0
-replace educ = 1 if inlist(dem07,3506,3507,3508) // education dichotomized into further education and non-further education
+replace educ = 1 if inlist(dem07,3506,3507,3508,3509) // education dichotomized into further education and non-further education
 
 gen employ = 0 
-replace employ = 1 if inlist(dem06,2,3,4,9,10,7) // self reported employment status dichotimized into working v non-working
+replace employ = 1 if inlist(dem06,2,3,4,9,10,7,3501) // self reported employment status dichotimized into working v non-working
 
 gen inchit = 0
 replace inchit = 1 if inlist(cov02f,4,5) // respondent indicated that the pandemic very or somewhet negatively affected household income
@@ -174,6 +177,109 @@ lab val employ employ
 
 lab def others 0 "Interviewed Alone" 1 "Others Present", add modify
 lab val rep01 others
+
+lab def rep05 0 "Some reluctance" 1 "Completely Willing", modify
+lab val rep05 rep05
+
+
+** Generating Unmet Need Variable
+********************************************************************************
+	
+gen contraception=method_gr
+	recode contraception (0=0) (1 2 = 1)
+	lab def contraception 0 "No use" 1 "Contraceptive use" .a "Don't know" .b "Refusal" .c "NA - pregnant"
+	lab val contraception contraception
+	
+	lab def unmet 1 "uses contraceptive" ///
+	2 "unmet need for limiting" ///
+	3 "unmet need for spacing" ///
+	4 "no unmet need" ///
+	5 "infecund" ///
+	.a "missing"
+g unmet=.	
+	la val unmet unmet
+
+** CONTRACEPTIVE USERS - GROUP 1
+replace unmet=1 if unmet==. & contraception==1
+
+* PREGNANT - GROUP 2 
+	// pregnant & did not want a birth at all
+replace unmet=2 if fer01a==1 & fer03==2
+	// pregnant & birth was sooner than wanted
+replace unmet=3 if fer01a==1 & fer04==1
+	// pregnant & wanted birth at that time
+replace unmet=4 if fer01a==1 & (inlist(fer03, 1, 3) | inlist(fer04, 2, 3))
+	// pregnant & wantedness unknown
+replace unmet=.a if unmet==. & fer01a==1 
+	// PPA & did not want a birth at all
+replace unmet=2 if fer04e==2 & fer04b==2
+	// PPA & birth was sooner than wanted
+replace unmet=3 if fer04e==2 & fer04c==1
+	// PPA & wanted birth at that time
+replace unmet=4 if fer04e==2 & (inlist(fer04b, 1, 3) | inlist(fer04c, 2, 3))
+	// PPA & wantedness unknown
+replace unmet=.a if unmet==. & fer04e==2
+
+* DETERMINE FECUNDITY - GROUP 3
+	// report definitely not able to have a child and not sterilized (sterilized is taken as method of contraception)
+replace unmet=5 if unmet==. & fer05==1
+	// report partner is definitely not able to have a child and is not sterilized (sterilized is taken as method of contraception)
+replace unmet=5 if unmet==. & fer08==1 
+	// age at first menstruation is not applicable
+replace unmet=5 if unmet==. & fer21==.b
+	// age at menopause is provided
+replace unmet=5 if unmet==. & fer24>20 & fer24<50
+
+* FECUND WOMEN - GROUP 4 - PARTNERED WOMEN
+* NOTE: survey asks about a period of 3 years instead of 2
+	// probably or definitely wants child within next 3 years
+	replace unmet=4 if unmet==. & inlist(fer14, 4, 5) & corespartner==1
+	// wants definitely or probably no more children ever
+	replace unmet=2 if unmet==. & inlist(fer15, 1, 2) & corespartner==1
+	// wants next child in more than 3 years
+	replace unmet=3 if unmet==. & inlist(fer15, 3, 4, 5) & corespartner==1
+	// did not answer question on wantedness of child
+	replace unmet=.a if unmet==. & (inlist(fer14, .a, .b) | inlist(fer15, .a, .b)) & corespartner==1
+
+* FECUND WOMEN - GROUP 4 - UNPARTNERED WOMEN
+* NOTE: survey asks about a period of 3 years instead of 2
+	// no partner and no sexual activity in the past 4 weeks
+	replace unmet=4 if unmet==. & fer13==2 & corespartner==0 
+	// probably or definitely wants child within next 3 years
+	replace unmet=4 if unmet==. & fer13==1 & inlist(fer14, 4, 5) & corespartner==0
+	// wants definitely or probably no more children ever
+	replace unmet=2 if unmet==. & fer13==1 & inlist(fer15, 1, 2) & corespartner==0
+	// wants next child in more than 3 years
+	replace unmet=3 if unmet==. & fer13==1 & inlist(fer15, 3, 4, 5) & corespartner==0
+	// did not answer question on wantedness of child
+	replace unmet=.a if unmet==. & fer13==1 & (inlist(fer14, .a, .b) | inlist(fer15, .a, .b)) & corespartner==0
+	
+g unmettot = unmet
+	recode unmettot (1=0) (2=1) (3=1) (4=0) (5=0)
+	lab def unmettot 0 "no unmet need" 1 "unmet need"
+	lab val unmettot unmettot
+
+g unmettot2 = unmet
+	recode unmettot2 (1=0) (2=1) (3=2) (4=0) (5=0)
+	lab def unmettot2 0 "no unmet need" 1 "unmet need for limiting" 2 "unmet need for spacing" 
+	lab val unmettot2 unmettot2
+
+* MET NEED
+
+
+** met need - 1: Limiting, 2: Spacing
+gen metneed = 0 if !missing(unmet)
+** Using Contraception and doesn't want more children
+replace metneed = 1 if contraception==1 & inlist(fer15, 1, 2)
+** Sterilized 
+replace metneed = 1 if fer05==1
+** Infecund
+replace metneed = 1 if fer08==1 | fer21==.b | inrange(fer24,20,50)
+
+** Using contraception and wants more children
+replace metneed = 2 if contraception==1 & inlist(fer15, 3, 4, 5)
+
+
 
 
 ** Descriptives
